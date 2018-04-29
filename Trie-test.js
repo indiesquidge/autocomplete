@@ -97,6 +97,14 @@ test('should be able to populate given a dictionary list of words', () => {
   expect(completion.suggest('ap')).toEqual(['ape', 'apothecary', 'apple'])
 })
 
+test('should be able to handle insertions and queries that include spacing', () => {
+  const completion = Trie()
+
+  completion.insert('  apple     ')
+
+  expect(completion.suggest('   ap ')).toEqual(['apple'])
+})
+
 // =================================================================
 // ================== Test framework & assertions ==================
 // =================================================================

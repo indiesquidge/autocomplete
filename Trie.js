@@ -5,9 +5,11 @@ function Trie () {
   let numberOfWords = 0
 
   const insert = word => {
+    const normalizedWord = word.trim()
+
     numberOfWords++
 
-    word.split('').reduce((parentNode, letter) => {
+    normalizedWord.split('').reduce((parentNode, letter) => {
       const children = parentNode.getChildren()
       const trieNode = children[letter] || TrieNode(letter)
 
@@ -17,7 +19,7 @@ function Trie () {
       }
 
       // mark the last letter of the word
-      if (letter === word[word.length - 1]) {
+      if (letter === normalizedWord[normalizedWord.length - 1]) {
         trieNode.setIsCompleteString(true)
       }
 
@@ -30,7 +32,8 @@ function Trie () {
   const count = () => numberOfWords
 
   const suggest = query => {
-    const startNode = query
+    const normalizedQuery = query.trim()
+    const startNode = normalizedQuery
       .split('')
       .reduce((parentNode, letter) => {
         if (!parentNode) return undefined
@@ -41,7 +44,7 @@ function Trie () {
     // the Trie contains no path match for the query
     if (!startNode) return []
 
-    return getSuggestions(startNode, query)
+    return getSuggestions(startNode, normalizedQuery)
   }
 
   const getSuggestions = (node, substring, suggestions = []) => {
