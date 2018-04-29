@@ -52,19 +52,24 @@ function Trie () {
       const nextSubstring = substring + childNode.getValue()
 
       if (!childNode) return substring
-      if (!childNode.getIsCompleteString()) {
-        return getSuggestions(childNode, nextSubstring, suggestions)
+
+      if (childNode.getIsCompleteString()) {
+        suggestions.push(nextSubstring)
       }
-      suggestions.push(nextSubstring)
+
+      getSuggestions(childNode, nextSubstring, suggestions)
     }
 
     return suggestions
   }
 
+  const populate = wordList => wordList.forEach(word => insert(word))
+
   return {
     insert,
     count,
     suggest,
+    populate,
     getRootNode
   }
 }

@@ -81,6 +81,22 @@ test('should be able to offer suggestions based on a word prefix', () => {
   expect(completion.suggest('x')).toEqual([])
 })
 
+test('should be able to populate given a dictionary list of words', () => {
+  const dictionary = [
+    'ape', 'apothecary', 'apple',
+    'pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle'
+  ]
+  const completion = Trie()
+
+  completion.populate(dictionary)
+
+  expect(completion.suggest('piz')).toEqual(
+    ['pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle']
+  )
+
+  expect(completion.suggest('ap')).toEqual(['ape', 'apothecary', 'apple'])
+})
+
 // =================================================================
 // ================== Test framework & assertions ==================
 // =================================================================
