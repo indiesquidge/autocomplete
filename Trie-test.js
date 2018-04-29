@@ -63,6 +63,24 @@ test('insertion should update a node to mark it as the final letter', () => {
   ).toBe(true)
 })
 
+test('should be able to offer suggestions based on a word prefix', () => {
+  const completion = Trie()
+
+  completion.insert('pizza')
+
+  expect(completion.suggest('piz')).toEqual(['pizza'])
+
+  completion.insert('pizzeria')
+
+  expect(completion.suggest('piz')).toEqual(['pizza', 'pizzeria'])
+
+  completion.insert('apple')
+
+  expect(completion.suggest('a')).toEqual(['apple'])
+
+  expect(completion.suggest('x')).toEqual([])
+})
+
 // =================================================================
 // ================== Test framework & assertions ==================
 // =================================================================

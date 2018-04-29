@@ -9,11 +9,10 @@ function Trie () {
 
     word.split('').reduce((parentNode, letter) => {
       const children = parentNode.getChildren()
-      const nodeInTrie = children[letter]
-      const trieNode = nodeInTrie || TrieNode(letter)
+      const trieNode = children[letter] || TrieNode(letter)
 
       // create the node if it doesn't exist yet
-      if (!nodeInTrie) {
+      if (!children[letter]) {
         children[letter] = trieNode
       }
 
@@ -30,9 +29,42 @@ function Trie () {
 
   const count = () => numberOfWords
 
+  const suggest = query => {
+    const startNode = query
+      .split('')
+      .reduce((parentNode, letter) => {
+        if (!parentNode) return undefined
+        const node = parentNode.getChildren()[letter]
+        return node
+      }, rootNode)
+
+    // the Trie contains no path match for the query
+    if (!startNode) return []
+
+    return getSuggestions(startNode, query)
+  }
+
+  const getSuggestions = (node, substring, suggestions = []) => {
+    const children = node.getChildren()
+
+    for (let key in children) {
+      const childNode = children[key]
+      const nextSubstring = substring + childNode.getValue()
+
+      if (!childNode) return substring
+      if (!childNode.getIsCompleteString()) {
+        return getSuggestions(childNode, nextSubstring, suggestions)
+      }
+      suggestions.push(nextSubstring)
+    }
+
+    return suggestions
+  }
+
   return {
     insert,
     count,
+    suggest,
     getRootNode
   }
 }
