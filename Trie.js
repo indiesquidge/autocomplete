@@ -33,18 +33,24 @@ function Trie () {
 
   const suggest = query => {
     const normalizedQuery = query.trim()
-    const startNode = normalizedQuery
-      .split('')
-      .reduce((parentNode, letter) => {
-        if (!parentNode) return undefined
-        const node = parentNode.getChildren()[letter]
-        return node
-      }, rootNode)
+    const endOfQueryNode = getEndOfQueryNode(normalizedQuery)
 
     // the Trie contains no path match for the query
-    if (!startNode) return []
+    if (!endOfQueryNode) return []
 
-    return getSuggestions(startNode, normalizedQuery)
+    return getSuggestions(endOfQueryNode, normalizedQuery)
+  }
+
+  const getEndOfQueryNode = query => {
+    let endOfQueryNode = rootNode
+
+    for (let letter of query.split('')) {
+      const childNode = endOfQueryNode.getChildren()[letter]
+      if (!childNode) return undefined
+      endOfQueryNode = childNode
+    }
+
+    return endOfQueryNode
   }
 
   const getSuggestions = (node, substring, suggestions = []) => {
