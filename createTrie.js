@@ -1,17 +1,17 @@
-module.exports = Trie
+module.exports = createTrie
 
-function Trie () {
-  const rootNode = TrieNode('__root__')
+function createTrie () {
+  const rootNode = createTrieNode('__root__')
   let numberOfWords = 0
 
-  const insert = word => {
+  function insert (word) {
     const normalizedWord = word.trim()
 
     numberOfWords++
 
     normalizedWord.split('').reduce((parentNode, letter) => {
       const children = parentNode.getChildren()
-      const trieNode = children[letter] || TrieNode(letter)
+      const trieNode = children[letter] || createTrieNode(letter)
 
       // create the node if it doesn't exist yet
       if (!children[letter]) {
@@ -27,21 +27,39 @@ function Trie () {
     }, rootNode)
   }
 
-  const getRootNode = () => rootNode
+  function count () {
+    return numberOfWords
+  }
 
-  const count = () => numberOfWords
-
-  const suggest = query => {
+  function suggest (query) {
     const normalizedQuery = query.trim()
     const endOfQueryNode = getEndOfQueryNode(normalizedQuery)
 
-    // the Trie contains no path match for the query
+    // the trie contains no path match for the query
     if (!endOfQueryNode) return []
 
     return getSuggestions(endOfQueryNode, normalizedQuery)
   }
 
-  const getEndOfQueryNode = query => {
+  function populate (wordList) {
+    wordList.forEach(word => insert(word))
+  }
+
+  function getRootNode () {
+    return rootNode
+  }
+
+  // public api
+  return {
+    insert,
+    count,
+    suggest,
+    populate,
+    getRootNode
+  }
+
+  // private methods
+  function getEndOfQueryNode (query) {
     let endOfQueryNode = rootNode
 
     for (let letter of query.split('')) {
@@ -53,7 +71,7 @@ function Trie () {
     return endOfQueryNode
   }
 
-  const getSuggestions = (node, substring, suggestions = []) => {
+  function getSuggestions (node, substring, suggestions = []) {
     const children = node.getChildren()
 
     for (let key in children) {
@@ -71,34 +89,31 @@ function Trie () {
 
     return suggestions
   }
-
-  const populate = wordList => wordList.forEach(word => insert(word))
-
-  return {
-    insert,
-    count,
-    suggest,
-    populate,
-    getRootNode
-  }
 }
 
-function TrieNode (letter) {
+function createTrieNode (letter) {
   const value = letter
   const children = {}
   let isCompleteString = false
 
-  const getValue = () => value
+  function getValue () {
+    return value
+  }
 
-  const getChildren = () => children
+  function getChildren () {
+    return children
+  }
 
-  const getIsCompleteString = () => isCompleteString
+  function getIsCompleteString () {
+    return isCompleteString
+  }
 
-  const setIsCompleteString = bool => {
+  function setIsCompleteString (bool) {
     isCompleteString = Boolean(bool)
     return isCompleteString
   }
 
+  // public api
   return {
     getValue,
     getChildren,

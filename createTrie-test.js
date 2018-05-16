@@ -1,8 +1,8 @@
 const assert = require('assert')
-const Trie = require('./Trie')
+const createTrie = require('./createTrie')
 
 test('inserts words and keep counts of the insertions', () => {
-  const completion = Trie()
+  const completion = createTrie()
 
   expect(completion.count()).toBe(0)
   completion.insert('pizza')
@@ -12,7 +12,7 @@ test('inserts words and keep counts of the insertions', () => {
 })
 
 test('inserts letters of a word into linked nodes and marks the ending letter', () => {
-  const completion = Trie()
+  const completion = createTrie()
 
   completion.insert('hey')
 
@@ -35,7 +35,7 @@ test('inserts letters of a word into linked nodes and marks the ending letter', 
 })
 
 test('insertion should build on existing nodes if the word prefixes match', () => {
-  const completion = Trie()
+  const completion = createTrie()
 
   completion.insert('hey')
   completion.insert('he')
@@ -46,7 +46,7 @@ test('insertion should build on existing nodes if the word prefixes match', () =
 })
 
 test('insertion should update a node to mark it as the final letter', () => {
-  const completion = Trie()
+  const completion = createTrie()
 
   completion.insert('hey')
   const rootNodeBefore = completion.getRootNode()
@@ -64,7 +64,7 @@ test('insertion should update a node to mark it as the final letter', () => {
 })
 
 test('should be able to offer suggestions based on a word prefix', () => {
-  const completion = Trie()
+  const completion = createTrie()
 
   completion.insert('pizza')
 
@@ -86,7 +86,7 @@ test('should be able to populate given a dictionary list of words', () => {
     'ape', 'apothecary', 'apple',
     'pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle'
   ]
-  const completion = Trie()
+  const completion = createTrie()
 
   completion.populate(dictionary)
 
@@ -98,7 +98,7 @@ test('should be able to populate given a dictionary list of words', () => {
 })
 
 test('should be able to handle insertions and queries that include spacing', () => {
-  const completion = Trie()
+  const completion = createTrie()
 
   completion.insert('  apple     ')
 
@@ -119,8 +119,8 @@ function test (title, callback) {
     }
     console.log(fgGreen, `✔ ${title}`)
   } catch (err) {
-    console.log(fgRed, `✖ ${title}`)
-    console.log(err)
+    console.error(fgRed, `✖ ${title}`)
+    console.error(err)
   }
 }
 
