@@ -13,7 +13,7 @@ function createTrie() {
       const children = parentNode.getChildren();
       const trieNode = children[letter] || createTrieNode(letter);
 
-      // create the node if it doesn't exist yet
+      // set the child if it does not exist
       if (!children[letter]) {
         children[letter] = trieNode;
       }
@@ -33,10 +33,11 @@ function createTrie() {
 
   function suggest(query) {
     const normalizedQuery = query.trim();
-    const endOfQueryNode = getEndOfQueryNode(normalizedQuery);
+    const nodePath = getNodePath(normalizedQuery);
+    const endOfQueryNode = nodePath[nodePath.length - 1];
 
-    // the trie contains no path match for the query
-    if (!endOfQueryNode) return [];
+    // the trie contains no path match for the query, only rootNode
+    if (nodePath.length === 1) return [];
 
     return getSuggestions(endOfQueryNode, normalizedQuery);
   }
@@ -59,22 +60,24 @@ function createTrie() {
   };
 
   // private methods
-  function getEndOfQueryNode(query) {
-    let endOfQueryNode = rootNode;
+  function getNodePath(query) {
+    let nodePath = [rootNode];
+    let parentNode = rootNode;
 
-    for (let letter of query.split("")) {
-      const childNode = endOfQueryNode.getChildren()[letter];
-      if (!childNode) return undefined;
-      endOfQueryNode = childNode;
+    for (const letter of query.split("")) {
+      const childNode = parentNode.getChildren()[letter];
+      if (!childNode) return nodePath;
+      nodePath.push(childNode);
+      parentNode = childNode;
     }
 
-    return endOfQueryNode;
+    return nodePath;
   }
 
   function getSuggestions(node, substring, suggestions = []) {
     const children = node.getChildren();
 
-    for (let key in children) {
+    for (const key in children) {
       const childNode = children[key];
       const nextSubstring = substring + childNode.getValue();
 
