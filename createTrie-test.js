@@ -145,6 +145,61 @@ test("should be able to handle insertions and queries that include spacing", () 
   expect(completion.suggest("   ap ")).toEqual(["apple"]);
 });
 
+test("should be able to delete a word", () => {
+  const completion = createTrie();
+
+  completion.populate(["pize", "pizza", "pizzeria", "pizzle", "pizzicato"]);
+
+  completion.delete("pizzle");
+
+  expect(completion.suggest("piz")).toEqual([
+    "pize",
+    "pizza",
+    "pizzeria",
+    "pizzicato"
+  ]);
+});
+
+test("should handle deleting a word when characters other than the last complete another string", () => {
+  const completion = createTrie();
+
+  completion.populate(["listen", "listened"]);
+
+  expect(completion.suggest("list")).toEqual(["listen", "listened"]);
+
+  completion.delete("listened");
+
+  expect(completion.suggest("list")).toEqual(["listen"]);
+});
+
+test("should handle deleting words that are prefixes of other words", () => {
+  const completion = createTrie();
+
+  completion.populate(["list", "listen", "listened"]);
+
+  expect(completion.suggest("lis")).toEqual(["list", "listen", "listened"]);
+
+  completion.delete("listen");
+
+  expect(completion.suggest("lis")).toEqual(["list", "listened"]);
+});
+
+test("should throw an error if the word to delete is not a word", () => {
+  const completion = createTrie();
+  const wordToDelete = "lis";
+
+  completion.insert("listen");
+
+  expect(completion.suggest("lis")).toEqual(["listen"]);
+
+  expect(() => completion.delete(wordToDelete)).toThrow({
+    name: "Error",
+    message: `${wordToDelete} is not a word, nothing deleted`
+  });
+
+  expect(completion.suggest("lis")).toEqual(["listen"]);
+});
+
 // =================================================================
 // ================== Test framework & assertions ==================
 // =================================================================
@@ -172,12 +227,18 @@ function expect(actual) {
     toEqual(expected) {
       assert.deepStrictEqual(actual, expected);
     },
+    toThrow(error) {
+      assert.throws(actual, error);
+    },
     not: {
       toBe(expected) {
         assert.notStrictEqual(actual, expected);
       },
       toEqual(expected) {
         assert.notDeepStrictEqual(actual, expected);
+      },
+      toThrow(error) {
+        assert.throws(actual, error);
       }
     }
   };
