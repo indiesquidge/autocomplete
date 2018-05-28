@@ -35,11 +35,17 @@ function createTrie() {
     const normalizedQuery = query.trim();
     const nodePath = getNodePath(normalizedQuery);
     const endOfQueryNode = nodePath[nodePath.length - 1];
+    const startingSuggestions = [];
 
     // the trie contains no path match for the query, only rootNode
     if (nodePath.length === 1) return [];
 
-    return getSuggestions(endOfQueryNode, normalizedQuery);
+    // the query itself matches a word in the trie
+    if (endOfQueryNode.getIsCompleteString()) {
+      startingSuggestions.push(normalizedQuery);
+    }
+
+    return getSuggestions(endOfQueryNode, normalizedQuery, startingSuggestions);
   }
 
   function populate(wordList) {

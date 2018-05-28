@@ -103,6 +103,14 @@ test("should be able to offer suggestions based on a word prefix", () => {
   expect(completion.suggest("x")).toEqual([]);
 });
 
+test("should include suggestions that match the query", () => {
+  const completion = createTrie();
+
+  completion.insert("list");
+
+  expect(completion.suggest("list")).toEqual(["list"]);
+});
+
 test("should be able to populate given a dictionary list of words", () => {
   const dictionary = [
     "ape",
