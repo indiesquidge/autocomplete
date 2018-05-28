@@ -1,0 +1,25 @@
+{
+  "name": "complete-me",
+  "version": "0.1.0",
+  "description": "low-level, primitive autocomplete using trie data structure",
+  "main": "createTrie.js",
+  "scripts": {
+    "test": "node createTrie-test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:indiesquidge/autocomplete.git"
+  },
+  "bugs": {
+    "url": "https://github.com/indiesquidge/autocomplete/issues"
+  },
+  "homepage": "https://github.com/indiesquidge/autocomplete",
+  "keywords": [
+    "trie",
+    "javascript",
+    "data-structures",
+    "autocomplete"
+  ],
+  "author": "Austin Wood",
+  "license": "MIT"
+}
