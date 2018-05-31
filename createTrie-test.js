@@ -198,6 +198,11 @@ test("should throw an error if the word to delete is not a word", () => {
   const completion = createTrie();
   const wordToDelete = "lis";
 
+  expect(() => completion.delete(wordToDelete)).toThrow({
+    name: "Error",
+    message: `${wordToDelete} is not a word, nothing deleted`
+  });
+
   completion.insert("listen");
 
   expect(completion.suggest("lis")).toEqual(["listen"]);

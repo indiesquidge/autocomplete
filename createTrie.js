@@ -61,7 +61,10 @@ function createTrie() {
     const lastNodeIndex = nodePath.length - 1;
 
     // the word to delete is not a word that exists in the trie
-    if (!nodePath[lastNodeIndex].getIsCompleteString()) {
+    if (
+      nodePath.length === 0 ||
+      !nodePath[lastNodeIndex].getIsCompleteString()
+    ) {
       throw Error(`${word} is not a word, nothing deleted`);
     }
 
