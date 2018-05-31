@@ -111,6 +111,16 @@ test("should include suggestions that match the query", () => {
   expect(completion.suggest("list")).toEqual(["list"]);
 });
 
+test("should not include suggestions that do not match the query", () => {
+  const completion = createTrie();
+
+  completion.insert("list");
+  completion.insert("listen");
+
+  expect(completion.suggest("listening")).toEqual([]);
+  expect(completion.suggest("lost")).toEqual([]);
+});
+
 test("should be able to populate given a dictionary list of words", () => {
   const dictionary = [
     "ape",
