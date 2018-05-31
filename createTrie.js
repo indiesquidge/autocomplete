@@ -37,8 +37,8 @@ function createTrie() {
     const endOfQueryNode = nodePath[nodePath.length - 1];
     const startingSuggestions = [];
 
-    // the trie contains no path match for the query, only rootNode
-    if (nodePath.length === 1) return [];
+    // the trie contains no path match for the query
+    if (nodePath.length === 0) return [];
 
     // the query itself matches a word in the trie
     if (endOfQueryNode.getIsCompleteString()) {
@@ -99,12 +99,15 @@ function createTrie() {
 
   // private methods
   function getNodePath(query) {
-    let nodePath = [rootNode];
+    let nodePath = [];
     let parentNode = rootNode;
 
     for (const letter of query.split("")) {
       const childNode = parentNode.getChildren()[letter];
-      if (!childNode) return nodePath;
+
+      // a node does not exist for some letter in the query
+      if (!childNode) return [];
+
       nodePath.push(childNode);
       parentNode = childNode;
     }
