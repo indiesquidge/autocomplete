@@ -1,6 +1,15 @@
 module.exports = createTrie;
 
 function createTrie() {
+  const publicApi = {
+    insert,
+    count,
+    suggest,
+    populate,
+    delete: remove,
+    getRootNode
+  };
+
   const rootNode = createTrieNode("__root__");
   let numberOfWords = 0;
 
@@ -91,14 +100,7 @@ function createTrie() {
   }
 
   // public api
-  return {
-    insert,
-    count,
-    suggest,
-    populate,
-    delete: remove,
-    getRootNode
-  };
+  return publicApi;
 
   // private methods
   function getNodePath(query) {
@@ -139,6 +141,13 @@ function createTrie() {
 }
 
 function createTrieNode(letter) {
+  const publicApi = {
+    getValue,
+    getChildren,
+    setIsCompleteString,
+    getIsCompleteString
+  };
+
   const value = letter;
   const children = {};
   let isCompleteString = false;
@@ -161,12 +170,7 @@ function createTrieNode(letter) {
   }
 
   // public api
-  return {
-    getValue,
-    getChildren,
-    setIsCompleteString,
-    getIsCompleteString
-  };
+  return publicApi;
 }
 
 /**
