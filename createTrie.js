@@ -7,7 +7,8 @@ function createTrie() {
     suggest,
     populate,
     delete: remove,
-    getRootNode
+    getRootNode,
+    toHierarchy
   };
 
   const rootNode = createTrieNode("__root__");
@@ -99,6 +100,13 @@ function createTrie() {
     }
   }
 
+  function toHierarchy() {
+    return {
+      name: rootNode.getValue(),
+      children: rootNode.getChildren({ arrayForm: true })
+    };
+  }
+
   // public api
   return publicApi;
 
@@ -156,7 +164,18 @@ function createTrieNode(letter) {
     return value;
   }
 
-  function getChildren() {
+  function getChildren(options = {}) {
+    if (options.arrayForm) {
+      return Object.keys(children).map(key => {
+        const node = children[key];
+
+        return {
+          name: node.getValue(),
+          children: node.getChildren({ arrayForm: true })
+        };
+      });
+    }
+
     return children;
   }
 

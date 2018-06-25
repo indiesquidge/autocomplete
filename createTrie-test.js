@@ -215,6 +215,73 @@ test("should throw an error if the word to delete is not a word", () => {
   expect(completion.suggest("lis")).toEqual(["listen"]);
 });
 
+test("toHierarchy should produce a hierarchy tree object starting at the root", () => {
+  const completion = createTrie();
+
+  expect(completion.toHierarchy()).toEqual({
+    name: "__root__",
+    children: []
+  });
+
+  completion.insert("ham");
+
+  expect(completion.toHierarchy()).toEqual({
+    name: "__root__",
+    children: [
+      {
+        name: "h",
+        children: [
+          {
+            name: "a",
+            children: [
+              {
+                name: "m",
+                children: []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  });
+
+  completion.insert("hype");
+
+  expect(completion.toHierarchy()).toEqual({
+    name: "__root__",
+    children: [
+      {
+        name: "h",
+        children: [
+          {
+            name: "a",
+            children: [
+              {
+                name: "m",
+                children: []
+              }
+            ]
+          },
+          {
+            name: "y",
+            children: [
+              {
+                name: "p",
+                children: [
+                  {
+                    name: "e",
+                    children: []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  });
+});
+
 // =================================================================
 // ================== Test framework & assertions ==================
 // =================================================================
